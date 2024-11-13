@@ -1,0 +1,18 @@
+/textBasedSimulation - audio+text/.cache/
+/textBasedSimulation/.env
+/textBasedSimulation/evaluations/TestScenarios_CSV/*.csv
+/textBasedSimulation/__pycache__/
+/whispering/
+/whispering-ui/
+/whispering/
+/whispering-ui/
+/SimulationSystem-VRCHAT/.env
+/SimulationSystem-VRCHAT/speech/output.mp3
+/SimulationSystem-VRCHAT/speech/example.ogg
+/SimulationSystem-VRCHAT/speech/recorded_speech.wav
+/SimulationSystem-VRCHAT/.cache/
+/SimulationSystem-VRCHAT/evaluations/
+/SimulationSystem-VRCHAT/recorded_speech.wav
+/SimulationSystem-VRCHAT/speech_check.wav
+*.pyc
+*.wav

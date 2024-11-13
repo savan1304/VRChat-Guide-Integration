@@ -1,0 +1,17 @@
+deepgram-sdk==2.12.0
+openai
+python-dotenv
+numpy
+sentence_transformers
+sounddevice
+speechrecognition
+playsound==1.2.2
+pydub
+vosk
+pymongo
+ffmpeg-python
+wavio
+pyaudio
+soundfile
+boto3
+unidecode
