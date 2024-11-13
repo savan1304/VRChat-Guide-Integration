@@ -1,4 +1,4 @@
-# Summary of the current changes as part of integraqtion effort:
+# Summary of the current changes as part of integration effort:
 # 1. Core GPT Integration:
 #   How: Kept essential GPT interaction functions
 #   Why: Required for generating VRChat guidance responses
@@ -126,12 +126,15 @@ async def get_deepgram_response(FILE):
         }
 
     # Send the audio to Deepgram and get the response
+    # integration effort
+    # Update model configuration for better VRChat term recognition
     response = await asyncio.create_task(
         deepgram.transcription.prerecorded(
             source,
             {
                 'punctuate': True,
                 'model': 'nova',
+                'keywords': ['VRChat', 'world', 'avatar', 'instance', 'portal']
             }
         )
     )

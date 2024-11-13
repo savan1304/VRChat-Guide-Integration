@@ -1,4 +1,4 @@
-# Summary of the current changes as part of integraqtion effort:
+# Summary of the current changes as part of integration effort:
 # No changes were made to the code.
 # All OCR functionality as it may be useful for reading VRChat UI elements
 #   Window capture integration

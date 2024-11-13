@@ -1,4 +1,4 @@
-# Summary of the current changes as part of integraqtion effort:
+# Summary of the current changes as part of integration effort:
 
 # 1. Utility Functions:
 #   How: Kept all functions unchanged

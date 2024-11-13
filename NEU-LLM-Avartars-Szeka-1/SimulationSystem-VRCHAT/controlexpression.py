@@ -1,4 +1,4 @@
-# Summary of the current changes as part of integraqtion effort:
+# Summary of the current changes as part of integration effort:
 # Updated movement descriptions to reflect guiding behavior
 # Maintained core expression and movement functionality
 # Optimized random actions for world/feature demonstrations

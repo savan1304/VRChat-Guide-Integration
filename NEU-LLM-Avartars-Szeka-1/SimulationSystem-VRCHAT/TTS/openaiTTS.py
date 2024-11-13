@@ -1,3 +1,8 @@
+# Summary of the current changes as part of integraqtion effort:
+
+# Error Handling:
+#  How: Added robust error checking
+#  Why: Ensures stable audio playback
 
 from openai import OpenAI
 import os
@@ -31,8 +36,23 @@ CURRENT_FRAME = 0
 def read_audio_file(filepath: str, output_device_index: int):
     global CURRENT_FRAME
 
+    # integration effort
+    # Add error handling
+    if not os.path.exists(filepath):
+        print(f"Audio file {filepath} not found")
+        return
+
     # Acquire the lock before starting playback
     playback_lock.acquire()
+
+    # integration effort
+    # Add error handling
+    try:
+        data, samplerate = soundfile.read(filepath, always_2d=True)
+    except Exception as e:
+        print(f"Error reading audio file: {e}")
+        playback_lock.release()
+        return
 
     def callback(data_out, frames, _, status):
         global CURRENT_FRAME

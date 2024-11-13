@@ -1,4 +1,4 @@
-# Summary of the current changes as part of integraqtion effort:
+# Summary of the current changes as part of integration effort:
 # Updated expression map to better reflect guidance scenarios
 # Modified action map for more appropriate onboarding interactions
 # Maintained core avatar control structure

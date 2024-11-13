@@ -1,4 +1,4 @@
-# Summary of the current changes as part of integraqtion effort:
+# Summary of the current changes as part of integration effort:
 
 # 1. Added GenieWorksheets Integration:
     # Imported necessary modules (Agent, SUQLKnowledgeBase, SUQLParser)

@@ -1,3 +1,13 @@
+# Summary of the current changes as part of integraqtion effort:
+# 1. Speech Model Configuration:
+#   How: Updated Deepgram model settings for VRChat terms
+#   Why: Improves recognition of VRChat-specific vocabulary
+# 
+# 2. Integration Points:
+#   How: Maintained connection with responseGenerator01.py
+#   Why: Essential for voice-based guidance interactions
+
+
 from deepgram import Deepgram
 import asyncio
 
@@ -46,15 +56,19 @@ async def main():
         }
 
     # Send the audio to Deepgram and get the response
+    # integration effort
+    # Update model configuration for better VRChat term recognition
     response = await asyncio.create_task(
-        deepgram.transcription.prerecorded(
-            source,
-            {
-                'punctuate': True,
-                'model': 'nova',
-            }
-        )
+    deepgram.transcription.prerecorded(
+        source,
+        {
+            'punctuate': True,
+            'model': 'nova',
+            'keywords': ['VRChat', 'world', 'avatar', 'instance', 'portal']
+        }
     )
+)
+
 
     # Write the response to the console
     return response

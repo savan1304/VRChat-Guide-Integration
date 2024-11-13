@@ -1,4 +1,4 @@
-# Summary of the current changes as part of integraqtion effort:
+# Summary of the current changes as part of integration effort:
 # Simplified logging elements to focus on core interaction metrics
 # Removed language learning specific logging elements
 # Maintained essential timing and response tracking
@@ -56,7 +56,19 @@ class CSVLogger:
         self.enum_values[enum.value] = result
 
     def write_to_csv(self, log_values=True):
-        headers = [header.value for header in LogElements]
+        # headers = [header.value for header in LogElements]
+
+        # integration effort
+        headers = [
+            "Message",
+            "NPC Response",
+            "Total time for Input",
+            "Time for Human speech detection",
+            "Time for voice normalization", 
+            "Time for audio recording",
+            "Time for Audio to Text",
+            "Time for Response"
+        ]
         if log_values:
             with open(self.curr_file, "a", newline="", encoding="utf-8") as csv_file:
                 csv_writer = csv.DictWriter(csv_file, fieldnames=headers)

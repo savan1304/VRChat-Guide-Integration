@@ -1,4 +1,4 @@
-# Summary of the current changes as part of integraqtion effort:
+# Summary of the current changes as part of integration effort:
 # def fillerShort()
     # Updated for VRChat Guide: Modified filler words to be more appropriate for world/event recommendations
 

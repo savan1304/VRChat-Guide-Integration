@@ -1,4 +1,4 @@
-# Summary of the current changes as part of integraqtion effort:
+# Summary of the current changes as part of integration effort:
 
 # AVATAR_DATA Enum:
 #   How: Kept unchanged
