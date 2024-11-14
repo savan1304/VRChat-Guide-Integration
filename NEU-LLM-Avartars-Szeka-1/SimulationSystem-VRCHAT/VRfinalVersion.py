@@ -57,22 +57,31 @@ import threading
 load_dotenv()
 
 # integration effort
-# onboarding agent imports
-from worksheets.agent import Agent
-from worksheets.knowledge import SUQLKnowledgeBase, SUQLParser
+# # onboarding agent imports
+# from worksheets.agent import Agent
+# from worksheets.knowledge import SUQLKnowledgeBase, SUQLParser
 
-from worksheets.runtime import GenieRuntime
-from worksheets.context import GenieContext
-from worksheets.chat import generate_next_turn
+# from worksheets.runtime import GenieRuntime
+# from worksheets.context import GenieContext
+# from worksheets.chat import generate_next_turn
 
-# Onboarding agent imports
-from worksheets.chat import generate_next_turn
-from worksheets.agent import Agent
-from worksheets.knowledge import SUQLKnowledgeBase, SUQLParser
+# # Onboarding agent imports
+# from worksheets.chat import generate_next_turn
+# from worksheets.agent import Agent
+# from worksheets.knowledge import SUQLKnowledgeBase, SUQLParser
 
 
 # integration effort
-# onboarding agent imports
+# Direct vrchatbot import
+from vrchat_guide.experiments.agents.vrchatbot.vrchatbot import main as vrchat_bot_main
+from worksheets.interface_utils import conversation_loop
+
+
+
+
+
+# integration effort
+# File and device configuration
 FILENAME = "./speech/current_conversation.wav"
 Virtual_MIC_Channel = audio_device.get_vbcable_devices_info().cable_c_input.id
 CSV_LOGGER = CSVLogger()
@@ -183,25 +192,25 @@ MAX_DEQUE_LENGTH = 50
 
 
 
-# Initialize onboarding agent
-onboarding_knowledge = SUQLKnowledgeBase(
-    llm_model_name="gpt-4",
-    tables_with_primary_keys={"vrchat_worlds": "id", "vrchat_events": "id"},
-    database_name="vrchat_guide"
-)
+# # Initialize onboarding agent
+# onboarding_knowledge = SUQLKnowledgeBase(
+#     llm_model_name="gpt-4",
+#     tables_with_primary_keys={"vrchat_worlds": "id", "vrchat_events": "id"},
+#     database_name="vrchat_guide"
+# )
 
-onboarding_parser = SUQLParser(
-    llm_model_name="gpt-4",
-    knowledge=onboarding_knowledge
-)
+# onboarding_parser = SUQLParser(
+#     llm_model_name="gpt-4",
+#     knowledge=onboarding_knowledge
+# )
 
-onboarding_agent = Agent(
-    botname="VRChatGuide",
-    description="You are a VRChat guide helping users discover worlds and events, providing recommendations and assistance with VRChat features.",
-    prompt_dir="prompts/onboarding",
-    knowledge_base=onboarding_knowledge,
-    knowledge_parser=onboarding_parser
-).load_from_gsheet(gsheet_id="1aLyf6kkOpKYTrnvI92kHdLVip1ENCEW5aTuoSZWy2fU")
+# onboarding_agent = Agent(
+#     botname="VRChatGuide",
+#     description="You are a VRChat guide helping users discover worlds and events, providing recommendations and assistance with VRChat features.",
+#     prompt_dir="prompts/onboarding",
+#     knowledge_base=onboarding_knowledge,
+#     knowledge_parser=onboarding_parser
+# ).load_from_gsheet(gsheet_id="1aLyf6kkOpKYTrnvI92kHdLVip1ENCEW5aTuoSZWy2fU")
 
 
 def filler(currentConversation):
@@ -264,6 +273,7 @@ def text_conversation_input(userName, conversationalUser):
 async def startConversation(currMode):
 
     # integration effort
+    vrchat_bot = await vrchat_bot_main()
     # audioRecorder.check_audio_devices()# VRC_OSCLib.actionChatbox(VRCclient, "Hi there! I'm your VRChat Guide. I can help you discover worlds, events, and features in VRChat. What would you like to know about?")
 
     STARTING_NOTIFICATION = "Hi there! I'm your VRChat Guide. I can help you discover worlds, events, and features in VRChat. What would you like to know about?"
@@ -285,7 +295,9 @@ async def startConversation(currMode):
             break
 
         start = time.perf_counter()
-        response = await generate_next_turn(currentConversation, onboarding_agent)
+        # integration effect Use conversation_loop instead of get_response
+        response = await conversation_loop(vrchat_bot, currentConversation)
+        resultConversationString = response
         resultConversationString = response.text
         end = time.perf_counter()
         npc_response_time = round(end - start, 2)
@@ -319,7 +331,8 @@ async def startConversation(currMode):
         CSV_LOGGER.set_enum(LogElements.NPC_RESPONSE, resultConversationString)
         CSV_LOGGER.set_enum(LogElements.TIME_FOR_RESPONSE, npc_response_time)
         CSV_LOGGER.write_to_csv(True)
-        conversation_count += 1
+        # integration effort
+        # conversation_count += 1
 
 
 # integration effort
