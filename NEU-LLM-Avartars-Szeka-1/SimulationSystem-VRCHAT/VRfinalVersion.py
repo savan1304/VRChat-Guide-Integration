@@ -57,17 +57,36 @@ import threading
 load_dotenv()
 
 # integration effort
+# onboarding agent imports
 from worksheets.agent import Agent
 from worksheets.knowledge import SUQLKnowledgeBase, SUQLParser
 
+from worksheets.runtime import GenieRuntime
+from worksheets.context import GenieContext
+from worksheets.chat import generate_next_turn
+
+# Onboarding agent imports
+from worksheets.chat import generate_next_turn
+from worksheets.agent import Agent
+from worksheets.knowledge import SUQLKnowledgeBase, SUQLParser
+
+
 # integration effort
+# onboarding agent imports
 FILENAME = "./speech/current_conversation.wav"
 Virtual_MIC_Channel = audio_device.get_vbcable_devices_info().cable_c_input.id
 CSV_LOGGER = CSVLogger()
+
+# VRC client setup
 parser = argparse.ArgumentParser()
+parser.add_argument("--ip", default="127.0.0.1", help="The ip of the OSC server")
+parser.add_argument("--port", type=int, default=9000, help="The port the OSC server is listening on")
+parser.add_argument("--use_cable_d", action="store_true", help="Use CABLE-D as the input device")
+args = parser.parse_args()
 VRCclient = udp_client.SimpleUDPClient(args.ip, args.port)
 
-# integration effort
+
+# integration effort (not needed for VRChat onboarding agent, but not sure whether to remove or not)
 DATABASE_NAME = "vrchat_guide"  # Changed from LLMDatabase
 DATABASE_URL = os.environ.get("DATABASE_URL")
 COLLECTION_USERS = "VRChat Users"  # Changed from NPC Avatars
@@ -75,48 +94,71 @@ COLLECTION_MEMORY_OBJECTS = "vrchat_interactions"  # Changed from ev018
 MAX_DEQUE_LENGTH = 50
 
 # integration effort
-onboarding_knowledge = SUQLKnowledgeBase(
-    llm_model_name="gpt-4",
-    tables_with_primary_keys={"vrchat_worlds": "id", "vrchat_events": "id"},
-    database_name="vrchat_guide"
-)
+# # Initialize onboarding agent
+# onboarding_knowledge = SUQLKnowledgeBase(
+#     llm_model_name="gpt-4",
+#     tables_with_primary_keys={"vrchat_worlds": "id", "vrchat_events": "id"},
+#     database_name="vrchat_guide"
+# )
 
-# integration effort
-onboarding_parser = SUQLParser(
-    llm_model_name="gpt-4",
-    knowledge=onboarding_knowledge
-)
+# # do not pass onboarding_knowledge to the parser
+# onboarding_parser = SUQLParser(
+#     llm_model_name="gpt-4",
+#     knowledge=onboarding_knowledge
+# )
 
-# integration effort
-onboarding_agent = Agent(
-    botname="VRChatGuide",
-    description="You are a VRChat guide helping users discover worlds and events, providing recommendations and assistance with VRChat features.",
-    prompt_dir="prompts/onboarding",
-    knowledge_base=onboarding_knowledge,
-    knowledge_parser=onboarding_parser
-).load_from_gsheet(gsheet_id="1aLyf6kkOpKYTrnvI92kHdLVip1ENCEW5aTuoSZWy2fU")
+# # Create runtime
+# bot = GenieRuntime(
+#     name="VRChatGuide",
+#     prompt_dir="prompts/onboarding",
+#     description="You are a VRChat guide helping users discover worlds and events, providing recommendations and assistance with VRChat features.",
+#     knowledge_base=onboarding_knowledge,
+#     knowledge_parser=onboarding_parser
+# )
+
+# # Load worksheets
+# bot = bot.load_from_gsheet(gsheet_id="1aLyf6kkOpKYTrnvI92kHdLVip1ENCEW5aTuoSZWy2fU")
+
+# onboarding_knowledge = SUQLKnowledgeBase(
+#     llm_model_name="gpt-4",
+#     tables_with_primary_keys={"vrchat_worlds": "id", "vrchat_events": "id"},
+#     database_name="vrchat_guide"
+# )
+
+# # integration effort
+# onboarding_parser = SUQLParser(
+#     llm_model_name="gpt-4",
+#     knowledge=onboarding_knowledge
+# )
+
+# # integration effort
+# onboarding_agent = Agent(
+#     botname="VRChatGuide",
+#     description="You are a VRChat guide helping users discover worlds and events, providing recommendations and assistance with VRChat features.",
+#     prompt_dir="prompts/onboarding",
+#     knowledge_base=onboarding_knowledge,
+#     knowledge_parser=onboarding_parser
+# ).load_from_gsheet(gsheet_id="1aLyf6kkOpKYTrnvI92kHdLVip1ENCEW5aTuoSZWy2fU")
 
 
-# integration effort
-FILENAME = "./speech/current_conversation.wav"
+# # integration effort
+# FILENAME = "./speech/current_conversation.wav"
+# # CABLE-C Input
+# Virtual_MIC_Channel = audio_device.get_vbcable_devices_info().cable_c_input.id
+# CSV_LOGGER = CSVLogger()
 
-# CABLE-C Input
-Virtual_MIC_Channel = audio_device.get_vbcable_devices_info().cable_c_input.id
+# #VRC client
+# parser = argparse.ArgumentParser()
+# parser.add_argument("--ip", default="127.0.0.1",
+#                         help="The ip of the OSC server")
+# parser.add_argument("--port", type=int, default=9000,
+#                         help="The port the OSC server is listening on")
 
-CSV_LOGGER = CSVLogger()
-
-#VRC client
-parser = argparse.ArgumentParser()
-parser.add_argument("--ip", default="127.0.0.1",
-                        help="The ip of the OSC server")
-parser.add_argument("--port", type=int, default=9000,
-                        help="The port the OSC server is listening on")
-
-parser.add_argument("--use_cable_d", action="store_true",
-                    help="Use CABLE-D as the input device")
-args = parser.parse_args()
-VRCclient = udp_client.SimpleUDPClient(args.ip, args.port)
-load_dotenv()
+# parser.add_argument("--use_cable_d", action="store_true",
+#                     help="Use CABLE-D as the input device")
+# args = parser.parse_args()
+# VRCclient = udp_client.SimpleUDPClient(args.ip, args.port)
+# load_dotenv()
 
 # Not needed for VRChat onboarding agent - legacy database configuration
 # DATABASE_NAME = "LLMDatabase"
@@ -125,11 +167,11 @@ load_dotenv()
 # COLLECTION_MEMORY_OBJECTS = "ev018"
 # MAX_DEQUE_LENGTH = 50
 
-# Basic objects for the Database.
-client = MongoClient(DATABASE_URL)
-LLMdatabase = client[DATABASE_NAME]
-userCollection = LLMdatabase[COLLECTION_USERS]
-memoryObjectCollection = LLMdatabase[COLLECTION_MEMORY_OBJECTS]
+# # Basic objects for the Database.
+# client = MongoClient(DATABASE_URL)
+# LLMdatabase = client[DATABASE_NAME]
+# userCollection = LLMdatabase[COLLECTION_USERS]
+# memoryObjectCollection = LLMdatabase[COLLECTION_MEMORY_OBJECTS]
 
 # Not needed for VRChat onboarding agent - specific to language learning memory tracking
 # REFLECTION_RETRIEVAL_COUNT = 5
@@ -138,6 +180,28 @@ memoryObjectCollection = LLMdatabase[COLLECTION_MEMORY_OBJECTS]
 
 # Not needed for VRChat onboarding agent - used for language learning conversation history
 # all_conversations = []
+
+
+
+# Initialize onboarding agent
+onboarding_knowledge = SUQLKnowledgeBase(
+    llm_model_name="gpt-4",
+    tables_with_primary_keys={"vrchat_worlds": "id", "vrchat_events": "id"},
+    database_name="vrchat_guide"
+)
+
+onboarding_parser = SUQLParser(
+    llm_model_name="gpt-4",
+    knowledge=onboarding_knowledge
+)
+
+onboarding_agent = Agent(
+    botname="VRChatGuide",
+    description="You are a VRChat guide helping users discover worlds and events, providing recommendations and assistance with VRChat features.",
+    prompt_dir="prompts/onboarding",
+    knowledge_base=onboarding_knowledge,
+    knowledge_parser=onboarding_parser
+).load_from_gsheet(gsheet_id="1aLyf6kkOpKYTrnvI92kHdLVip1ENCEW5aTuoSZWy2fU")
 
 
 def filler(currentConversation):
@@ -187,7 +251,7 @@ def audio_conversation_input(CSV_LOGGER, FILENAME):
 def text_conversation_input(userName, conversationalUser):
     start = time.perf_counter()
     currentConversation = input(
-        f"Talk with VRChat Guide about worlds, events, or features! "
+        f"Talk with VRChat Guide about worlds, events, or features!"
     )
     end = time.perf_counter()
     text_input_time = round(end - start, 2)
@@ -200,13 +264,13 @@ def text_conversation_input(userName, conversationalUser):
 async def startConversation(currMode):
 
     # integration effort
-    audioRecorder.check_audio_devices()# VRC_OSCLib.actionChatbox(VRCclient, "Hi there! I'm your VRChat Guide. I can help you discover worlds, events, and features in VRChat. What would you like to know about?")
+    # audioRecorder.check_audio_devices()# VRC_OSCLib.actionChatbox(VRCclient, "Hi there! I'm your VRChat Guide. I can help you discover worlds, events, and features in VRChat. What would you like to know about?")
 
     STARTING_NOTIFICATION = "Hi there! I'm your VRChat Guide. I can help you discover worlds, events, and features in VRChat. What would you like to know about?"
     openaiTTS.generateAudio(STARTING_NOTIFICATION, Virtual_MIC_Channel)
     VRC_OSCLib.actionChatbox(VRCclient, STARTING_NOTIFICATION)
 
-    conversation_count = 0
+    # conversation_count = 0
     print("Starting VRChat Guide conversation...\n")
 
     while True:
@@ -221,7 +285,7 @@ async def startConversation(currMode):
             break
 
         start = time.perf_counter()
-        response = await onboarding_agent.get_response(currentConversation)
+        response = await generate_next_turn(currentConversation, onboarding_agent)
         resultConversationString = response.text
         end = time.perf_counter()
         npc_response_time = round(end - start, 2)
@@ -258,32 +322,32 @@ async def startConversation(currMode):
         conversation_count += 1
 
 
+# integration effort
+# def fetchBaseDescription(userName: str):
+#     baseObservation = deque(
+#         memoryObjectCollection.find(
+#             {"Username": userName, "Type": "VRChat Guide Base"}
+#         ),
+#     )
+#     if baseObservation:
+#         observation_dict = baseObservation[0]
+#         filtered_observations = [
+#             obs for obs in observation_dict['Observations'] if obs.strip()
+#         ]
+#         observation_dict['Observations'] = filtered_observations
+#     return baseObservation
 
-def fetchBaseDescription(userName: str):
-    baseObservation = deque(
-        memoryObjectCollection.find(
-            {"Username": userName, "Type": "VRChat Guide Base"}
-        ),
-    )
-    if baseObservation:
-        observation_dict = baseObservation[0]
-        filtered_observations = [
-            obs for obs in observation_dict['Observations'] if obs.strip()
-        ]
-        observation_dict['Observations'] = filtered_observations
-    return baseObservation
 
-
-
-def updateBaseDescription(userName: str, observationList: list):
-    currTime = datetime.datetime.utcnow()
-    memoryObjectData = {
-        "Username": userName,
-        "Type": "VRChat Guide Base",
-        "Creation Time": currTime,
-        "Observations": observationList,
-    }
-    memoryObjectCollection.insert_one(memoryObjectData)
+# integration effort
+# def updateBaseDescription(userName: str, observationList: list):
+#     currTime = datetime.datetime.utcnow()
+#     memoryObjectData = {
+#         "Username": userName,
+#         "Type": "VRChat Guide Base",
+#         "Creation Time": currTime,
+#         "Observations": observationList,
+#     }
+#     memoryObjectCollection.insert_one(memoryObjectData)
 
 
 
@@ -409,28 +473,28 @@ def updateBaseDescription(userName: str, observationList: list):
 if __name__ == "__main__":
     currMode = setConversationMode()
     
-    # Initialize VRChat Guide
-    if userCollection.find_one({"Username": "VRChatGuide"}):
-        avatar_expression_map = userCollection.find_one({"Username": "VRChatGuide"})[
-            AVATAR_DATA.AVATAR_EXPRESSION_MAP.value]
-        avatar_action_map = userCollection.find_one({"Username": "VRChatGuide"})[
-            AVATAR_DATA.AVATAR_ACTION_MAP.value]
-        avatar_voice = userCollection.find_one({"Username": "VRChatGuide"})[
-            AVATAR_DATA.AVATAR_VOICE.value]
-        avatar_expressions = list(avatar_expression_map.keys())
-        avatar_actions = list(avatar_action_map.keys())
-    else:
-        userData = {
-            "Username": "VRChatGuide",
-            "Description": "VRChat Guide and World/Event Recommender",
-            "Avatar Expressions Map": avatar_expression_map,
-            "Avatar Actions Map": avatar_action_map,
-            "Avatar Voice": avatar_voice,
-        }
-        userCollection.insert_one(userData)
-        print("VRChat Guide initialized successfully!")
-        avatar_expressions = list(avatar_expression_map.keys())
-        avatar_actions = list(avatar_action_map.keys())
+    # # Initialize VRChat Guide
+    # if userCollection.find_one({"Username": "VRChatGuide"}):
+    #     avatar_expression_map = userCollection.find_one({"Username": "VRChatGuide"})[
+    #         AVATAR_DATA.AVATAR_EXPRESSION_MAP.value]
+    #     avatar_action_map = userCollection.find_one({"Username": "VRChatGuide"})[
+    #         AVATAR_DATA.AVATAR_ACTION_MAP.value]
+    #     avatar_voice = userCollection.find_one({"Username": "VRChatGuide"})[
+    #         AVATAR_DATA.AVATAR_VOICE.value]
+    #     avatar_expressions = list(avatar_expression_map.keys())
+    #     avatar_actions = list(avatar_action_map.keys())
+    # else:
+    #     userData = {
+    #         "Username": "VRChatGuide",
+    #         "Description": "VRChat Guide and World/Event Recommender",
+    #         "Avatar Expressions Map": avatar_expression_map,
+    #         "Avatar Actions Map": avatar_action_map,
+    #         "Avatar Voice": avatar_voice,
+    #     }
+    #     userCollection.insert_one(userData)
+    #     print("VRChat Guide initialized successfully!")
+    #     avatar_expressions = list(avatar_expression_map.keys())
+    #     avatar_actions = list(avatar_action_map.keys())
 
-    startConversation(currMode)
-    client.close()
+    asyncio.run(startConversation(currMode))
+    # client.close()
