@@ -1,0 +1,11 @@
+[project]
+name = "vrchatbot"
+version = "0.1.0"
+description = "VRChat Guide Bot"
+dependencies = [
+    "worksheets",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

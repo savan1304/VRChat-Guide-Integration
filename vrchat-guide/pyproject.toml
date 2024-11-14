@@ -39,4 +39,4 @@ dev-dependencies = [
 [tool.uv.sources]
 suql = { git = "https://github.com/stanford-oval/suql", branch = "wip/dependencies" }
 kraken = { path = "packages/knowledge-agent", editable = true }
-
+vrchatbot = { path = "experiments/agents/vrchatbot", editable = true }
