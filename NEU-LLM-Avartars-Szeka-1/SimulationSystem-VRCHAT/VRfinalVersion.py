@@ -27,6 +27,7 @@
     # Removed conversation history tracking
 
 
+import sys
 from responseGenerator import *
 import time
 import asyncio
@@ -46,7 +47,7 @@ from enums import CONVERSATION_MODE, AGENT_MODE, AVATAR_DATA
 from dialoge_helper import get_npc_name
 import VRC_OSCLib
 import argparse
-from pythonosc import udp_client
+# from pythonosc import udp_client
 import random
 import fillerWords
 from TTS import openaiTTS, audio_device
@@ -73,9 +74,17 @@ load_dotenv()
 
 # integration effort
 # Direct vrchatbot import
-from vrchat_guide.experiments.agents.vrchatbot.vrchatbot import main as vrchat_bot_main
-from worksheets.interface_utils import conversation_loop
 
+sys.path.append(os.path.abspath("/home/savan1304/CS7980/NEU-LLM-Avatars-Szeka/vrchat-guide/experiments/agents/vrchatbot/vrchatbot.py"))
+from vrchatbot import main as vrchat_bot_main
+
+sys.path.append(os.path.abspath("/home/savan1304/CS7980/NEU-LLM-Avatars-Szeka/vrchat-guide/src/worksheets/interface_utils.py"))
+from interface_utils import conversation_loop
+# from vrchat_guide.experiments.agents.vrchatbot.vrchatbot import main as vrchat_bot_main
+# from worksheets.interface_utils import conversation_loop
+
+sys.path.append(os.path.abspath("/home/savan1304/CS7980/NEU-LLM-Avatars-Szeka/NEU-LLM-Avartars-Szeka-1/python-osc/pythonosc"))
+from pythonosc import udp_client
 
 
 
@@ -295,7 +304,7 @@ async def startConversation(currMode):
             break
 
         start = time.perf_counter()
-        # integration effect Use conversation_loop instead of get_response
+        # integration effort: Use conversation_loop instead of get_response
         response = await conversation_loop(vrchat_bot, currentConversation)
         resultConversationString = response
         resultConversationString = response.text

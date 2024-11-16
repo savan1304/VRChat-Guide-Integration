@@ -1,0 +1,7 @@
+{
+    "python.analysis.extraPaths": [
+        "./vrchat-guide/experiments/agents",
+        "./vrchat-guide/src/worksheets",
+        "./NEU-LLM-Avartars-Szeka-1/python-osc"
+    ]
+}

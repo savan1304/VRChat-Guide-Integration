@@ -9,9 +9,15 @@ from uuid import uuid4
 
 from loguru import logger
 from suql.agent import postprocess_suql
-from worksheets.agent import Agent
-from worksheets.interface_utils import conversation_loop
-from worksheets.knowledge import SUQLKnowledgeBase, SUQLParser
+
+sys.path.append(os.path.abspath("/home/savan1304/CS7980/NEU-LLM-Avatars-Szeka/vrchat-guide/src/worksheets/agent.py"))
+from agent import Agent
+
+sys.path.append(os.path.abspath("/home/savan1304/CS7980/NEU-LLM-Avatars-Szeka/vrchat-guide/src/worksheets/interface_utils.py"))
+from interface_utils import conversation_loop
+
+sys.path.append(os.path.abspath("/home/savan1304/CS7980/NEU-LLM-Avatars-Szeka/vrchat-guide/src/worksheets/knowledge.py"))
+from knowledge import SUQLKnowledgeBase, SUQLParser
 
 # Configure logging
 def prompt_filter(record):
